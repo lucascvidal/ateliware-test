@@ -1,2 +1,4 @@
 ateliware-test/
 __pycache__/
+.env
+Procfile

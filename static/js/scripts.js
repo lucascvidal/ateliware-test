@@ -32,8 +32,14 @@ function FetchNow(language, table) {
 
 			let item = response.items[0];
 
-			// TODO: POST request to back-end to store information in db
+			// POST request to back-end to store information in db
+			const xhr = new XMLHttpRequest();
+			const url = '/data';
+			xhr.open('POST', url, true);
+			xhr.setRequestHeader("Content-Type", "application/json");
+			xhr.send(JSON.stringify(item));
 
+			// Add item information to HTML
 			addTableItem(item, table);
 
 			table.classList.remove("invisible");
@@ -79,5 +85,5 @@ function addTableItem(item, table) {
 
 		let date = new Date();
 		dateCell.innerHTML = date.toDateString();
-	}	
+	}
 }
