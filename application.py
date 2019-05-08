@@ -53,7 +53,7 @@ def data():
         db.session.add(new_repo)
         db.session.commit()
 
-        return "Stored to database: " + item["name"]
+        return "Stored in database: " + item["name"]
 
     else:
 
