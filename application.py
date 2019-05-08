@@ -1,6 +1,6 @@
 import os
 
-from flask import Flask, render_template, request
+from flask import Flask, render_template, request, jsonify
 from flask_sqlalchemy import SQLAlchemy
 
 app = Flask(__name__)
@@ -19,6 +19,16 @@ class Repos(db.Model):
     forks = db.Column(db.Integer)
     date = db.Column(db.String)
 
+    def asdict(self):
+        return {
+            "id": self.id,
+            "name": self.name,
+            "language": self.language,
+            "stars": self.stars,
+            "forks": self.forks,
+            "date": self.date
+        }
+
 
 @app.route("/")
 def index():
@@ -35,10 +45,23 @@ def data():
 
         new_repo = Repos(name=item["name"], language=item["language"],
                          stars=item["stargazers_count"], forks=item["forks_count"], date=item["date"])
+
         db.session.add(new_repo)
         db.session.commit()
 
         return "Stored to database: " + item["name"]
+
+    else:
+
+        repo_array = []
+
+        all_repos = Repos.query.order_by(Repos.id).all()
+
+        for repo in all_repos:
+            
+            repo_array.append(repo.asdict())
+
+        return jsonify(repo_array)
 
 
 if __name__ == "__main__":

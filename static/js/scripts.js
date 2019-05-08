@@ -2,20 +2,27 @@ window.onload = () => {
 
 	let table = document.querySelector('table');
 
-	let button = document.querySelector('.main-btn');
+	let mainButton = document.querySelector('.main-btn');
 
-	button.onclick = function () {
+	let historyButton = document.querySelector('.history-btn');
+
+	mainButton.onclick = function () {
 
 		let languageList = ['python', 'javascript', 'ruby', 'java', 'c'];
 
 		for (let i = 0; i < languageList.length; i++) {
 
-			fetchNow(languageList[i], table);
+			fetchGitHub(languageList[i], table);
 		}
+	};
+
+	historyButton.onclick = () => {
+
+		fetchDB(table);
 	};
 };
 
-function fetchNow(language, table) {
+function fetchGitHub(language, table) {
 
 	let url = 'https://api.github.com/search/repositories?q=language:' + language + '&sort=stars&order=desc';
 
@@ -87,4 +94,25 @@ function addTableItem(item, table) {
 
 	let dateCell = newRow.insertCell();
 	dateCell.innerHTML = item.date;
+}
+
+function fetchDB(table) {
+
+	const xhr = new XMLHttpRequest();
+	const url = '/data';
+	xhr.open('GET', url, true);
+	xhr.send();
+
+	xhr.onreadystatechange = () => {
+
+		if (xhr.readyState == 4) {
+
+			console.log(xhr.response);
+
+			/* for (let i = 0; i < response.length; i++) {
+
+				addTableItem(response[i], table);
+			} */
+		}
+	};
 }
