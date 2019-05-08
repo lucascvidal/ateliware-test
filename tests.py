@@ -43,6 +43,11 @@ class TestHomeRoute(unittest.TestCase):
 class TestDataRoute(unittest.TestCase):
 
     def setUp(self):
+
+        self.obj = json.dumps({"name": "automated-test", "language": "Python", "stargazers_count": 1, "forks_count": 1, "date": "Test Date",
+                               "html_url": "automated-test-url", "description": "This is not a repo, it is an automated test result"})
+        
+        self.headers = {"Content-Type": "application/json"}
         app.config["TESTING"] = True
         app.config["DEBUG"] = False
         self.app = app.test_client()
@@ -59,21 +64,11 @@ class TestDataRoute(unittest.TestCase):
         self.assertIn("application/json", response.content_type)
 
     def test_post_request(self):
-
-        obj = json.dumps({"name": "automated-test", "language": "Python", "stargazers_count": 1, "forks_count": 1, "date": "Test Date",
-                          "html_url": "automated-test-url", "description": "This is not a repo, it is an automated test result"})
-
-        response = self.app.post(
-            "/data", data=obj, headers={"Content-Type": "application/json"})
+        response = self.app.post("/data", data=self.obj, headers=self.headers)
         self.assertEqual(response.status_code, 200)
 
     def test_post_content_type(self):
-
-        obj = json.dumps({"name": "automated-test", "language": "Python", "stargazers_count": 1, "forks_count": 1, "date": "Test Date",
-                          "html_url": "automated-test-url", "description": "This is not a repo, it is an automated test result"})
-
-        response = self.app.post(
-            "/data", data=obj, headers={"Content-Type": "application/json"})
+        response = self.app.post("/data", data=self.obj, headers=self.headers)
         self.assertIn("text/html", response.content_type)
 
 
