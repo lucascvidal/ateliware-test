@@ -10,12 +10,12 @@ window.onload = () => {
 
 		for (let i = 0; i < languageList.length; i++) {
 
-			FetchNow(languageList[i], table);
+			fetchNow(languageList[i], table);
 		}
 	};
 };
 
-function FetchNow(language, table) {
+function fetchNow(language, table) {
 
 	let url = 'https://api.github.com/search/repositories?q=language:' + language + '&sort=stars&order=desc';
 
@@ -31,6 +31,8 @@ function FetchNow(language, table) {
 		.then((response) => {
 
 			let item = response.items[0];
+			let itemDate = new Date();
+			item.date = itemDate.toDateString();
 
 			// POST request to back-end to store information in db
 			const xhr = new XMLHttpRequest();
@@ -38,6 +40,14 @@ function FetchNow(language, table) {
 			xhr.open('POST', url, true);
 			xhr.setRequestHeader("Content-Type", "application/json");
 			xhr.send(JSON.stringify(item));
+
+			xhr.onreadystatechange = () => {
+
+				if (xhr.readyState == 4) {
+
+					console.log(xhr.response)
+				}
+			};
 
 			// Add item information to HTML
 			addTableItem(item, table);
@@ -76,14 +86,5 @@ function addTableItem(item, table) {
 	forksCell.innerHTML = item.forks_count;
 
 	let dateCell = newRow.insertCell();
-
-	if (item.date) {
-
-		dateCell.innerHTML = item.date.toDateString();
-
-	} else {
-
-		let date = new Date();
-		dateCell.innerHTML = date.toDateString();
-	}
+	dateCell.innerHTML = item.date;
 }
