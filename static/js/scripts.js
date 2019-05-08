@@ -87,10 +87,10 @@ function addTableItem(item, table) {
 	languageCell.innerHTML = item.language;
 
 	let starsCell = newRow.insertCell();
-	starsCell.innerHTML = item.stargazers_count;
+	starsCell.innerHTML = item.stargazers_count || item.stars;
 
 	let forksCell = newRow.insertCell();
-	forksCell.innerHTML = item.forks_count;
+	forksCell.innerHTML = item.forks_count || item.forks;
 
 	let dateCell = newRow.insertCell();
 	dateCell.innerHTML = item.date;
@@ -107,12 +107,14 @@ function fetchDB(table) {
 
 		if (xhr.readyState == 4) {
 
-			console.log(xhr.response);
+			let response = JSON.parse(xhr.response);
 
-			/* for (let i = 0; i < response.length; i++) {
+			for (let i = 0; i < response.length; i++) {
 
 				addTableItem(response[i], table);
-			} */
+			}
+
+			table.classList.remove("invisible");
 		}
 	};
 }

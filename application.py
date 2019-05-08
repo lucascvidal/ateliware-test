@@ -18,6 +18,8 @@ class Repos(db.Model):
     stars = db.Column(db.Integer)
     forks = db.Column(db.Integer)
     date = db.Column(db.String)
+    html_url = db.Column(db.String)
+    description = db.Column(db.String)
 
     def asdict(self):
         return {
@@ -26,7 +28,9 @@ class Repos(db.Model):
             "language": self.language,
             "stars": self.stars,
             "forks": self.forks,
-            "date": self.date
+            "date": self.date,
+            "html_url": self.html_url,
+            "description": self.description
         }
 
 
@@ -44,7 +48,7 @@ def data():
         item = request.get_json()
 
         new_repo = Repos(name=item["name"], language=item["language"],
-                         stars=item["stargazers_count"], forks=item["forks_count"], date=item["date"])
+                         stars=item["stargazers_count"], forks=item["forks_count"], date=item["date"], html_url=item["html_url"], description=item["description"])
 
         db.session.add(new_repo)
         db.session.commit()
@@ -58,7 +62,7 @@ def data():
         all_repos = Repos.query.order_by(Repos.id).all()
 
         for repo in all_repos:
-            
+
             repo_array.append(repo.asdict())
 
         return jsonify(repo_array)
